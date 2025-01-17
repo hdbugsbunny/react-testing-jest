@@ -16,18 +16,17 @@ test("renders user form with two input fields and submit button", () => {
 });
 
 test("form submission triggers the onUserAdd callback", async () => {
-  //! NOT THE BEST IMPLEMENTATION
-  // Callback Function
-  const argList = [];
-  const mockCallback = (...args) => {
-    argList.push(args);
-  };
+  // Jest Callback Function
+  const mockCallback = jest.fn();
 
   // Render The Component
   render(<UserForm onUserAdd={mockCallback} />);
 
-  // Find The Two Inputs And Simulate Input Changes
-  const [userNameInput, userEmailInput] = screen.getAllByRole("textbox");
+  // Find The Two Inputs
+  const userNameInput = screen.getByRole("textbox", { name: /user name/i });
+  const userEmailInput = screen.getByRole("textbox", { name: /user email/i });
+
+  // Simulate The Input Changes
   await userEvent.click(userNameInput);
   await userEvent.keyboard("John Doe");
   await userEvent.click(userEmailInput);
@@ -38,8 +37,8 @@ test("form submission triggers the onUserAdd callback", async () => {
   await userEvent.click(button);
 
   // Assertion - Make Sure The Callback Method was Called with the Correct Arguments
-  expect(argList).toHaveLength(1);
-  expect(argList[0][0]).toEqual({
+  expect(mockCallback).toHaveBeenCalled();
+  expect(mockCallback).toHaveBeenCalledWith({
     userName: "John Doe",
     userEmail: "johndoe@example.com",
   });
