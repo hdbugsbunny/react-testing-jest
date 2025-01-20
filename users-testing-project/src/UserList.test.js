@@ -38,6 +38,7 @@ test("render one row per user Fallback #2: For Query Selection", () => {
 });
 
 test("render the email and name of each user", () => {
+  // Getting Users From Render Component
   const { users } = renderComponent();
 
   // Find All The Rows in The Table
