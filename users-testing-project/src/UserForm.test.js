@@ -43,3 +43,26 @@ test("form submission triggers the onUserAdd callback", async () => {
     userEmail: "johndoe@example.com",
   });
 });
+
+test("form submission empties the two inputs", async () => {
+  // Render The Component
+  render(<UserForm onUserAdd={() => {}} />);
+
+  // Find The Two Inputs
+  const userNameInput = screen.getByRole("textbox", { name: /user name/i });
+  const userEmailInput = screen.getByRole("textbox", { name: /user email/i });
+
+  // Simulate The Input Changes
+  await userEvent.click(userNameInput);
+  await userEvent.keyboard("John Doe");
+  await userEvent.click(userEmailInput);
+  await userEvent.keyboard("johndoe@example.com");
+
+  // Find The Submit Button And Simulate A Click
+  const button = screen.getByRole("button");
+  await userEvent.click(button);
+
+  // Assertion - Make Sure The Inputs Are Empty After Submission
+  expect(userNameInput).toHaveValue("");
+  expect(userEmailInput).toHaveValue("");
+});
